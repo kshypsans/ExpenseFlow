@@ -77,26 +77,6 @@ expenseflow_pro/
 └── run.py
 ```
 
-## Upload to GitHub
-
-1. Create a new repository on GitHub.
-2. Open the project folder in VS Code.
-3. Initialize Git if it hasn't already been initialized.
-4. Commit your project files.
-5. Connect your repository and push your code.
-
-Example commands for a new local Git repository:
-
-```bash
-git init
-git add .
-git commit -m "Initial ExpenseFlow commit"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
-git push -u origin main
-```
-
-Replace the example repository URL with your own. If Git is already initialized or a remote already exists, adjust the commands accordingly.
 
 **Security:** Never upload passwords, `.env` files, secret keys, personal receipts, or local database files. Ensure these are excluded through `.gitignore`.
 
