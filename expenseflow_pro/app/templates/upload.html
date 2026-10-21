@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Scan a receipt · ExpenseFlow{% endblock %}
+{% block breadcrumb %}Scan a receipt{% endblock %}
+{% block content %}
+<section class="welcome-row"><div><div class="eyebrow">LESS TYPING, MORE CLARITY</div><h1>Let's scan that receipt <span class="wave">✳</span></h1><p class="muted">Upload a photo, let OCR help, then review the details.</p></div></section>
+<div class="scan-layout"><section class="surface scan-card"><div class="scan-step-title"><span class="step-bubble">01</span><div><h2>Upload your receipt</h2><p class="muted">A clear, well-lit image gives the best results.</p></div></div>
+<form method="post" enctype="multipart/form-data" id="upload-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label class="dropzone" id="dropzone" for="receipt"><div class="upload-graphic"><span>↑</span><i>✳</i></div><strong>Drop your receipt here</strong><span class="muted">or <em>browse files</em> from your device</span><small>PNG, JPG, WEBP, TIFF, BMP or PDF · Up to 8 MB</small><span id="chosen-file" class="chosen-file">No file selected yet</span></label><input type="file" name="receipt" id="receipt" accept=".png,.jpg,.jpeg,.webp,.tif,.tiff,.bmp,.pdf" required hidden><button class="button primary full-width" type="submit" id="scan-submit">Read receipt with OCR <span>→</span></button><p class="privacy-line">♢ &nbsp; Your receipt stays in this app. You review everything before saving.</p></form>
+</section><aside class="surface scan-guide"><div class="guide-heading"><span class="guide-spark">✦</span><div><h2>Simple as 1, 2, 3</h2><p class="muted">We've got the busywork covered.</p></div></div><div class="guide-step"><span>1</span><div><strong>Snap or upload</strong><p>Choose a photo of your paper receipt.</p></div></div><div class="guide-step"><span>2</span><div><strong>Let OCR read it</strong><p>We'll try to find the merchant, date and total.</p></div></div><div class="guide-step"><span>3</span><div><strong>Review & save</strong><p>Correct anything that looks off, then save.</p></div></div><div class="guide-note"><span>☼</span><p><strong>For best results</strong><br>Keep the whole receipt in frame, avoid shadows, and make sure the text is in focus.</p></div></aside></div>
+{% endblock %}
+{% block scripts %}<script>
+const input=document.getElementById('receipt'), drop=document.getElementById('dropzone'), nameBox=document.getElementById('chosen-file'), form=document.getElementById('upload-form'), btn=document.getElementById('scan-submit');
+input.addEventListener('change',()=>{nameBox.textContent=input.files.length?'✓ '+input.files[0].name:'No file selected yet';drop.classList.toggle('has-file',!!input.files.length)});
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('dragging')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('dragging')}));
+drop.addEventListener('drop',e=>{if(e.dataTransfer.files.length){input.files=e.dataTransfer.files;input.dispatchEvent(new Event('change'))}});
+form.addEventListener('submit',()=>{btn.disabled=true;btn.innerHTML='Reading your receipt… <span class="spinner"></span>'});
+</script>{% endblock %}

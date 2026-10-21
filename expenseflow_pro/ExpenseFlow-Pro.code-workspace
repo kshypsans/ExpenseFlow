@@ -1,0 +1,14 @@
+{
+  "folders": [
+    { "path": "." }
+  ],
+  "settings": {
+    "python.terminal.activateEnvironment": true,
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+      ".venv": true,
+      "instance": true
+    }
+  }
+}

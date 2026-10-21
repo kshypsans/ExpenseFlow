@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{% block title %}ExpenseFlow{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('expenseflow-theme')||'light'}catch(e){}</script>
+</head>
+<body>
+{% if current_user.is_authenticated %}
+<aside class="sidebar">
+  <a class="brand" href="{{ url_for('main.dashboard') }}"><span class="brand-icon">e.</span><span>expense<span class="brand-light">flow</span></span></a>
+  <div class="workspace-label">WORKSPACE</div>
+  <nav class="side-nav">
+    <a class="{% if request.endpoint == 'main.dashboard' %}active{% endif %}" href="{{ url_for('main.dashboard') }}"><span>▦</span> Overview</a>
+    <a class="{% if request.endpoint in ['main.expenses','main.edit_expense'] %}active{% endif %}" href="{{ url_for('main.expenses') }}"><span>↗</span> All expenses</a>
+    <a class="{% if request.endpoint in ['main.upload'] %}active{% endif %}" href="{{ url_for('main.upload') }}"><span>＋</span> Scan a receipt <i>OCR</i></a>
+    <a class="{% if request.endpoint == 'main.manual_expense' %}active{% endif %}" href="{{ url_for('main.manual_expense') }}"><span>✎</span> Manual entry</a>
+    <a class="{% if request.endpoint == 'main.analytics' %}active{% endif %}" href="{{ url_for('main.analytics') }}"><span>◷</span> Analytics</a>
+    <a class="{% if request.endpoint in ['main.budgets','main.delete_budget'] %}active{% endif %}" href="{{ url_for('main.budgets') }}"><span>◎</span> Budgets</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="help-card"><span class="help-star">✳</span><strong>Small steps add up.</strong><p>Every receipt gives you a clearer picture of your money.</p></div>
+    <div class="profile-row"><div class="avatar">{{ current_user.name[:1]|upper }}</div><div class="profile-info"><strong>{{ current_user.name }}</strong><span>{{ current_user.email }}</span></div><form method="post" action="{{ url_for('auth.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="logout-btn" title="Sign out" aria-label="Sign out">↪</button></form></div>
+  </div>
+</aside>
+{% endif %}
+<div class="{% if current_user.is_authenticated %}app-main{% else %}auth-main{% endif %}">
+  {% if current_user.is_authenticated %}
+  <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> {% block breadcrumb %}Overview{% endblock %}</div><div class="top-actions"><span class="today-pill">◷ &nbsp; {{ now if now else "Your money, in view" }}</span><button class="theme-toggle" id="theme-toggle" aria-label="Toggle light or dark theme" title="Toggle theme">☾</button><a class="button primary compact" href="{{ url_for('main.upload') }}">＋ Add expense</a></div></header>
+  {% endif %}
+  <main class="{% if current_user.is_authenticated %}page-content{% else %}auth-content{% endif %}">
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category,message in messages %}<div class="flash {{ category }}">{{ message }}<button onclick="this.parentElement.remove()" aria-label="Dismiss">×</button></div>{% endfor %}</div>{% endif %}{% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  {% if current_user.is_authenticated %}<footer class="app-footer">Made for a little more financial clarity <span>✳</span></footer>{% endif %}
+</div>
+<script>
+const toggle=document.getElementById('theme-toggle');
+if(toggle){const setIcon=()=>toggle.textContent=document.documentElement.dataset.theme==='dark'?'☀':'☾';setIcon();toggle.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('expenseflow-theme',next)}catch(e){}setIcon()})}
+</script>
+{% block scripts %}{% endblock %}
+</body></html>

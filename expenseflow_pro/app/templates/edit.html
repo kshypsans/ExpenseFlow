@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Edit expense · ExpenseFlow{% endblock %}
+{% block breadcrumb %}Edit expense{% endblock %}
+{% block content %}
+<section class="welcome-row"><div><div class="eyebrow">KEEP THINGS ACCURATE</div><h1>Edit expense</h1><p class="muted">Make changes to this saved transaction.</p></div><a class="button secondary" href="{{ url_for('main.expenses') }}">← Back to expenses</a></section>
+<section class="surface edit-surface"><form method="post" class="expense-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Merchant / vendor<input name="vendor" value="{{ expense.vendor }}" maxlength="120" required></label><div class="form-split"><label>Amount (₹)<input type="number" name="amount" value="{{ expense.amount }}" min="0" step="0.01" required></label><label>Date<input type="date" name="expense_date" value="{{ expense.expense_date.isoformat() }}" required></label></div><label>Category<select name="category">{% for c in categories %}<option value="{{ c }}" {% if expense.category == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></label><label>Notes<textarea name="notes" rows="3" maxlength="500">{{ expense.notes or '' }}</textarea></label><div class="review-actions"><a class="button secondary" href="{{ url_for('main.expenses') }}">Cancel</a><button class="button primary" type="submit">Save changes ✓</button></div></form></section>
+{% endblock %}

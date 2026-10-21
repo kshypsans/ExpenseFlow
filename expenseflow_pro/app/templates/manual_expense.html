@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Manual entry · ExpenseFlow{% endblock %}
+{% block breadcrumb %}Manual entry{% endblock %}
+{% block content %}
+<section class="welcome-row"><div><div class="eyebrow">NO RECEIPT? NO PROBLEM</div><h1>Add an expense</h1><p class="muted">Record cash purchases, transfers, or anything you paid for.</p></div><a class="button secondary" href="{{ url_for('main.upload') }}">Scan a receipt instead</a></section>
+<section class="surface edit-surface"><form method="post" class="expense-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Merchant or description<input name="vendor" maxlength="120" placeholder="e.g. Lunch, local shop, bus fare" required></label><div class="form-split"><label>Amount (₹)<div class="amount-input"><span>₹</span><input type="number" name="amount" min="0.01" max="100000000" step="0.01" placeholder="0.00" required></div></label><label>Date<input type="date" name="expense_date" value="{{ today.isoformat() }}" required></label></div><label>Category<select name="category">{% for c in categories %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select></label><label>Notes <span class="field-hint">Optional</span><textarea name="notes" rows="3" maxlength="500" placeholder="Anything you want to remember"></textarea></label><div class="review-actions"><a class="button secondary" href="{{ url_for('main.expenses') }}">Cancel</a><button class="button primary" type="submit">Save expense →</button></div></form></section>
+{% endblock %}
